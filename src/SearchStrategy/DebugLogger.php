@@ -28,6 +28,8 @@ final class DebugLogger implements SearchStrategy
     private $separator;
     /** @var resource */
     private $output;
+    /** @var bool */
+    private $isFirst = true;
 
     public function __construct(
         SearchStrategy $search,
@@ -55,9 +57,12 @@ final class DebugLogger implements SearchStrategy
     public function nextCandidate(): Puzzle
     {
         $puzzle = $this->search->nextCandidate();
+        if (!$this->isFirst) {
+            $this->log($this->separator);
+        }
+        $this->isFirst = false;
         $this->log($puzzle->representation());
         usleep($this->timeout);
-        $this->log($this->separator);
         return $puzzle;
     }
 

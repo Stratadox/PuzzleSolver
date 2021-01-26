@@ -44,10 +44,12 @@ final class MovesToFileRenderer implements SolutionRenderer
 
     public function render(Solution $solution): void
     {
-        foreach ($solution->moves() as $move) {
+        foreach ($solution->moves() as $i => $move) {
+            if ($i) {
+                $this->log($this->separator);
+            }
             $this->log((string) $move);
             usleep($this->timeout);
-            $this->log($this->separator);
         }
     }
 

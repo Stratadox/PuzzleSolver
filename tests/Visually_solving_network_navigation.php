@@ -59,7 +59,7 @@ class Visually_solving_network_navigation extends TestCase
 
         $output = file_get_contents(self::FILE);
 
-        self::assertEquals('A; B; C; ', $output);
+        self::assertEquals('A; B; C', $output);
     }
 
     /** @test */
@@ -79,6 +79,6 @@ class Visually_solving_network_navigation extends TestCase
 
         $output = file_get_contents(self::FILE);
 
-        self::assertEquals('Go to B; Go to C; ', $output);
+        self::assertEquals('Go to B; Go to C', $output);
     }
 }
