@@ -1,6 +1,6 @@
 # Puzzle Solver
 
-[![Build Status](https://circleci.com/gh/Stratadox/PuzzleSolver.svg?style=shield)](https://app.circleci.com/pipelines/github/Stratadox/PuzzleSolver)
+![Github Action](https://github.com/Stratadox/PuzzleSolver/workflows/Github%20Action/badge.svg)
 [![codecov](https://codecov.io/gh/Stratadox/PuzzleSolver/branch/main/graph/badge.svg)](https://codecov.io/gh/Stratadox/PuzzleSolver)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Stratadox/PuzzleSolver/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/Stratadox/PuzzleSolver/?branch=main)
 [![Maintainability](https://api.codeclimate.com/v1/badges/d43d21a26591fb14cdc3/maintainability)](https://codeclimate.com/github/Stratadox/PuzzleSolver/maintainability)
