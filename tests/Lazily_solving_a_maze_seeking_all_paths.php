@@ -65,7 +65,10 @@ class Lazily_solving_a_maze_seeking_all_paths extends TestCase
         }
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group thorough
+     */
     function lazily_solving_a_maze_with_three_loopless_solutions()
     {
         $maze = $this->newMaze->fromString('

@@ -27,5 +27,9 @@
         "phpunit/phpunit": "^8.5",
         "ext-json": "*",
         "ext-readline": "*"
+    },
+    "scripts": {
+        "test": "phpunit -c phpunit.xml --testdox",
+        "test-coverage": "phpunit -c phpunit-coverage.xml --exclude-group thorough --testdox"
     }
 }

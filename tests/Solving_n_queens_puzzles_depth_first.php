@@ -48,11 +48,25 @@ class Solving_n_queens_puzzles_depth_first extends TestCase
         self::assertCount(40, $solutions);
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group thorough
+     */
     function solving_the_8_queens_puzzle()
     {
         $solutions = $this->solver->solve(NQueensPuzzle::forQueens(8));
 
         self::assertCount(92, $solutions);
+    }
+
+    /**
+     * @test
+     * @group thorough
+     */
+    function solving_the_9_queens_puzzle()
+    {
+        $solutions = $this->solver->solve(NQueensPuzzle::forQueens(9));
+
+        self::assertCount(352, $solutions);
     }
 }

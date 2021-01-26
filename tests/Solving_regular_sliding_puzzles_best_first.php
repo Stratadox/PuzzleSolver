@@ -32,7 +32,10 @@ class Solving_regular_sliding_puzzles_best_first extends TestCase
         self::assertEquals('Slide 3 left', $solution->moves()[3]);
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group thorough
+     */
     function solving_the_sliding_puzzle_from_the_example()
     {
         $solver = UniversalSolver::aimingTo(Find::aBestSolution())

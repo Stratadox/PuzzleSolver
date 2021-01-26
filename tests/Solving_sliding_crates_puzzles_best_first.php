@@ -15,6 +15,29 @@ use function implode;
 class Solving_sliding_crates_puzzles_best_first extends TestCase
 {
     /** @test */
+    function solving_a_simple_sliding_crates_puzzle()
+    {
+        $solver = UniversalSolver::aimingTo(Find::aBestSolution())
+            ->withHeuristic(new CrateHeuristic())
+            ->select();
+
+        $puzzle = SlidingCratesPuzzle::fromString('
+            . . A A A 
+            r r . . B 
+            . . . . B 
+            . D . . B 
+            . D C C C 
+        ', 'r');
+
+        $solution = $solver->solve($puzzle)[0];
+
+        self::assertEquals(6, $solution->cost(), implode("\n", $solution->moves()->items()));
+    }
+
+    /**
+     * @test
+     * @group thorough
+     */
     function solving_the_puzzle_from_the_example()
     {
         $solver = UniversalSolver::aimingTo(Find::aBestSolution())
