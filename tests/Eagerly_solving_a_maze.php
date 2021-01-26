@@ -24,7 +24,7 @@ class Eagerly_solving_a_maze extends TestCase
     protected function setUp(): void
     {
         $this->solver = UniversalSolver::aimingTo(Find::aBestSolution())->select();
-        $this->newMaze = MazeFactory::default();
+        $this->newMaze = MazeFactory::make();
     }
 
     /** @test */

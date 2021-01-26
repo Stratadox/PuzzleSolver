@@ -5,7 +5,8 @@ namespace Stratadox\PuzzleSolver\Test;
 use PHPUnit\Framework\TestCase;
 use Stratadox\PuzzleSolver\Find;
 use Stratadox\PuzzleSolver\Puzzle\SlidingCrates\CrateHeuristic;
-use Stratadox\PuzzleSolver\Puzzle\SlidingCrates\SlidingCratesPuzzle;
+use Stratadox\PuzzleSolver\Puzzle\SlidingCrates\SlidingCratesPuzzleFactory;
+use Stratadox\PuzzleSolver\PuzzleCreationFailure;
 use Stratadox\PuzzleSolver\UniversalSolver;
 use function implode;
 
@@ -21,13 +22,14 @@ class Solving_sliding_crates_puzzles_best_first extends TestCase
             ->withHeuristic(new CrateHeuristic())
             ->select();
 
-        $puzzle = SlidingCratesPuzzle::fromString('
+        $puzzle = SlidingCratesPuzzleFactory::make()->fromString('
             . . A A A 
             r r . . B 
             . . . . B 
             . D . . B 
             . D C C C 
-        ', 'r');
+            TARGET: r
+        ');
 
         $solution = $solver->solve($puzzle)[0];
 
@@ -44,17 +46,35 @@ class Solving_sliding_crates_puzzles_best_first extends TestCase
             ->withHeuristic(new CrateHeuristic())
             ->select();
 
-        $puzzle = SlidingCratesPuzzle::fromString('
+        $puzzle = SlidingCratesPuzzleFactory::make()->fromString('
             . . . . A A 
             . . B B C C 
             r r . . E F 
             G G H H E F 
             . . . I E F 
             . . . I J J 
-        ', 'r');
+            TARGET: r
+        ');
 
         $solution = $solver->solve($puzzle)[0];
 
         self::assertEquals(29, $solution->cost(), implode("\n", $solution->moves()->items()));
+    }
+
+    /** @test */
+    function not_creating_puzzles_without_target()
+    {
+        $factory = SlidingCratesPuzzleFactory::make();
+
+        $this->expectException(PuzzleCreationFailure::class);
+
+        $factory->fromString('
+            . . . . A A 
+            . . B B C C 
+            r r . . E F 
+            G G H H E F 
+            . . . I E F 
+            . . . I J J 
+        ');
     }
 }

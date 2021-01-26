@@ -3,7 +3,7 @@
 use PHPUnit\Framework\TestCase;
 use Stratadox\PuzzleSolver\Find;
 use Stratadox\PuzzleSolver\Puzzle\SlidingPuzzle\LevenshteinHeuristic;
-use Stratadox\PuzzleSolver\Puzzle\SlidingPuzzle\SlidingPuzzle;
+use Stratadox\PuzzleSolver\Puzzle\SlidingPuzzle\SlidingPuzzleFactory;
 use Stratadox\PuzzleSolver\UniversalSolver;
 
 /**
@@ -18,10 +18,10 @@ class Solving_regular_sliding_puzzles_best_first extends TestCase
             ->withHeuristic(new LevenshteinHeuristic())
             ->select();
 
-        $puzzle = SlidingPuzzle::withPieces(
-            [2, 3],
-            [1, 0]
-        );
+        $puzzle = SlidingPuzzleFactory::make()->fromString('
+            2, 3
+            1, 0
+        ');
 
         $solution = $solver->solve($puzzle)[0];
 
@@ -42,11 +42,11 @@ class Solving_regular_sliding_puzzles_best_first extends TestCase
             ->withHeuristic(new LevenshteinHeuristic())
             ->select();
 
-        $puzzle = SlidingPuzzle::withPieces(
-            [2, 4, 1],
-            [8, 5, 7],
-            [3, 0, 6]
-        );
+        $puzzle = SlidingPuzzleFactory::make()->fromString('
+            2, 4, 1
+            8, 5, 7
+            3, 0, 6
+        ');
 
         $solution = $solver->solve($puzzle)[0];
 

@@ -4,6 +4,7 @@ namespace Stratadox\PuzzleSolver\Test;
 
 use PHPUnit\Framework\TestCase;
 use Stratadox\PuzzleSolver\Find;
+use Stratadox\PuzzleSolver\Puzzle\NQueens\NQueensFactory;
 use Stratadox\PuzzleSolver\Puzzle\NQueens\NQueensPuzzle;
 use Stratadox\PuzzleSolver\PuzzleSolver;
 use Stratadox\PuzzleSolver\Renderer\MovesToFileRenderer;
@@ -42,7 +43,7 @@ class Visualising_the_n_queens_solutions extends TestCase
     /** @test */
     function visualising_the_winning_moves_of_the_first_solution()
     {
-        $solution = $this->solver->solve(NQueensPuzzle::forQueens(5))[0];
+        $solution = $this->solver->solve(NQueensFactory::make()->fromString('5'))[0];
         $renderer = MovesToFileRenderer::fromFilenameAndSeparator(self::FILE, '; ');
 
         $renderer->render($solution);

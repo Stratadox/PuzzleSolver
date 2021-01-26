@@ -24,7 +24,7 @@ final class MazeFactory implements PuzzleFactory
         $this->hero = $hero;
     }
 
-    public static function default(): self
+    public static function make(): PuzzleFactory
     {
         return new self('#', 'X', 'H');
     }

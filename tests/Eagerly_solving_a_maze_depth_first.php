@@ -30,7 +30,7 @@ class Eagerly_solving_a_maze_depth_first extends TestCase
                 DepthFirstStrategyFactory::make()
             )
         );
-        $this->newMaze = MazeFactory::default();
+        $this->newMaze = MazeFactory::make();
     }
 
     /** @test */

@@ -14,7 +14,7 @@ final class RiverCrossingPuzzle implements Puzzle
     /** @var Moves */
     private $crossings;
 
-    public function __construct(Farmer $farmer, Moves $crossings)
+    private function __construct(Farmer $farmer, Moves $crossings)
     {
         $this->farmer = $farmer;
         $this->crossings = $crossings;

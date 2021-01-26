@@ -23,7 +23,7 @@ class Lazily_solving_a_maze_seeking_all_paths extends TestCase
     protected function setUp(): void
     {
         $this->solver = UniversalSolver::aimingTo(Find::allLooplessSolutions())->select();
-        $this->newMaze = MazeFactory::default();
+        $this->newMaze = MazeFactory::make();
     }
 
     /** @test */

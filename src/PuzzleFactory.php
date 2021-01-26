@@ -11,5 +11,6 @@ namespace Stratadox\PuzzleSolver;
  */
 interface PuzzleFactory
 {
+    /** @throws PuzzleCreationFailure */
     public function fromString(string $puzzle): Puzzle;
 }

@@ -4,7 +4,8 @@ namespace Stratadox\PuzzleSolver\Test;
 
 use PHPUnit\Framework\TestCase;
 use Stratadox\PuzzleSolver\Find;
-use Stratadox\PuzzleSolver\Puzzle\NetworkNavigation\NetworkNavigationPuzzle;
+use Stratadox\PuzzleSolver\Puzzle\NetworkNavigation\NetworkPuzzleFactory;
+use Stratadox\PuzzleSolver\PuzzleCreationFailure;
 use Stratadox\PuzzleSolver\UniversalSolver;
 
 /**
@@ -18,8 +19,9 @@ class Solving_network_navigation_best_first extends TestCase
         $solver = UniversalSolver::aimingTo(Find::aBestSolution())
             ->withWeightedMoves()
             ->select();
-        $puzzle = NetworkNavigationPuzzle::fromJsonAndStartAndGoal('
-            [
+        $puzzle = NetworkPuzzleFactory::make()->fromString('
+          {
+            "edges": [
               {
                 "from": "A",
                 "to": "B",
@@ -35,8 +37,11 @@ class Solving_network_navigation_best_first extends TestCase
                 "to": "C",
                 "cost": 2.76
               }
-            ]
-        ', 'A', 'C');
+            ],
+            "start": "A",
+            "goal": "C"
+          }
+        ');
 
         $solution = $solver->solve($puzzle)[0];
 
@@ -44,5 +49,15 @@ class Solving_network_navigation_best_first extends TestCase
         self::assertCount(2, $solution->moves());
         self::assertEquals('Go to B', $solution->moves()[0]);
         self::assertEquals('Go to C', $solution->moves()[1]);
+    }
+
+    /** @test */
+    function not_loading_invalid_json_input()
+    {
+        $factory = NetworkPuzzleFactory::make();
+
+        $this->expectException(PuzzleCreationFailure::class);
+
+        $factory->fromString('{ "edges": [{');
     }
 }

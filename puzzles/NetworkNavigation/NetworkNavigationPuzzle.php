@@ -39,6 +39,14 @@ final class NetworkNavigationPuzzle implements Puzzle
         foreach (json_decode($json, true) as $edge) {
             $network[$edge['from']][$edge['to']] = $edge['cost'];
         }
+        return self::fromArrayAndStartAndGoal($network, $start, $goal);
+    }
+
+    public static function fromArrayAndStartAndGoal(
+        array $network,
+        string $start,
+        string $goal
+    ): Puzzle {
         return new self($start, $goal, $network, Moves::none());
     }
 

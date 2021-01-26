@@ -3,6 +3,7 @@
 namespace Stratadox\PuzzleSolver\Test;
 
 use PHPUnit\Framework\TestCase;
+use Stratadox\PuzzleSolver\Puzzle\WolfGoatCabbage\RiverCrossingFactory;
 use Stratadox\PuzzleSolver\Puzzle\WolfGoatCabbage\RiverCrossingPuzzle;
 use Stratadox\PuzzleSolver\SearchStrategy\BreadthFirstStrategyFactory;
 use Stratadox\PuzzleSolver\SearchStrategy\DepthFirstStrategyFactory;
@@ -24,7 +25,7 @@ class Solving_a_wolf_goat_cabbage_puzzle_automatically extends TestCase
         $solver = EagerSolver::using(VisitedNodeSkipperFactory::using(
             BreadthFirstStrategyFactory::make()
         ));
-        $puzzle = RiverCrossingPuzzle::begin();
+        $puzzle = RiverCrossingFactory::make()->fromString('Foo de la bar');
 
         $solution = $solver->solve($puzzle)[0];
 

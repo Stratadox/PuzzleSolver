@@ -152,7 +152,7 @@ function maze(array $solvers): Solutions
     }
     $n = readline("Type the number of your maze and press enter: ");
 
-    $maze = MazeFactory::default()->fromString($mazes[$n]);
+    $maze = MazeFactory::make()->fromString($mazes[$n]);
 
     return $solvers[EAGER_BFS]->solve($maze);
 }
