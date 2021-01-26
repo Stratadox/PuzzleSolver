@@ -9,6 +9,7 @@ use function end;
 use function implode;
 use function range;
 use function str_repeat;
+use const PHP_EOL;
 
 final class Board
 {
@@ -61,9 +62,9 @@ final class Board
 
     public function __toString(): string
     {
-        $board = '  ' . implode('  ', array_slice(range('a', 'z'), 0, $this->size)) . "\n";
+        $board = '  ' . implode('  ', array_slice(range('a', 'z'), 0, $this->size)) . PHP_EOL;
         foreach (range($this->size, 0, -1) as $i) {
-            $board .= $i . ' ' . str_repeat('   ', $this->size) . "\n";
+            $board .= $i . ' ' . str_repeat('   ', $this->size) . PHP_EOL;
         }
         return $board;
     }

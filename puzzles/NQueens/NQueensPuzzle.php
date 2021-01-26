@@ -7,6 +7,7 @@ use Stratadox\PuzzleSolver\Puzzle;
 use Stratadox\PuzzleSolver\Moves;
 use function explode;
 use function implode;
+use const PHP_EOL;
 
 final class NQueensPuzzle implements Puzzle
 {
@@ -28,12 +29,12 @@ final class NQueensPuzzle implements Puzzle
 
     public function representation(): string
     {
-        $board = explode("\n", (string) $this->board);
+        $board = explode(PHP_EOL, (string) $this->board);
         /** @var QueenPlacement $queen */
         foreach ($this->moves as $queen) {
-            $board[1 + $queen->row()][2 + $queen->column() * 3] = "Q";
+            $board[1 + $queen->row()][2 + $queen->column() * 3] = 'Q';
         }
-        return implode("\n", $board);
+        return implode(PHP_EOL, $board);
     }
 
     public function afterMaking(Move ...$moves): Puzzle
