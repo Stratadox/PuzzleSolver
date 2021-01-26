@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f7f14d5a78a0984623eaee6eb917205e",
+    "content-hash": "e5be2b412edbab177ae2b60b0ef7b603",
     "packages": [
         {
             "name": "stratadox/collection-contracts",
@@ -1061,12 +1061,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "600038234d7523270505fc1bfc442fbe813b8f2d"
+                "reference": "db043e108edc5065662fec040aedea5bf30f8a12"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/600038234d7523270505fc1bfc442fbe813b8f2d",
-                "reference": "600038234d7523270505fc1bfc442fbe813b8f2d",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/db043e108edc5065662fec040aedea5bf30f8a12",
+                "reference": "db043e108edc5065662fec040aedea5bf30f8a12",
                 "shasum": ""
             },
             "conflict": {
@@ -1210,7 +1210,7 @@
                 "prestashop/autoupgrade": ">=4,<4.10.1",
                 "prestashop/contactform": ">1.0.1,<4.3",
                 "prestashop/gamification": "<2.3.2",
-                "prestashop/productcomments": ">=4,<4.2",
+                "prestashop/productcomments": ">=4,<4.2.1",
                 "prestashop/ps_facetedsearch": "<3.4.1",
                 "privatebin/privatebin": "<1.2.2|>=1.3,<1.3.2",
                 "propel/propel": ">=2-alpha.1,<=2-alpha.7",
@@ -1375,7 +1375,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-01-19T21:21:59+00:00"
+            "time": "2021-01-20T22:18:29+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -2240,12 +2240,12 @@
             "version": "1.9.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/webmozart/assert.git",
+                "url": "https://github.com/webmozarts/assert.git",
                 "reference": "bafc69caeb4d49c39fd0779086c03a3738cbb389"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmozart/assert/zipball/bafc69caeb4d49c39fd0779086c03a3738cbb389",
+                "url": "https://api.github.com/repos/webmozarts/assert/zipball/bafc69caeb4d49c39fd0779086c03a3738cbb389",
                 "reference": "bafc69caeb4d49c39fd0779086c03a3738cbb389",
                 "shasum": ""
             },
@@ -2283,8 +2283,8 @@
                 "validate"
             ],
             "support": {
-                "issues": "https://github.com/webmozart/assert/issues",
-                "source": "https://github.com/webmozart/assert/tree/master"
+                "issues": "https://github.com/webmozarts/assert/issues",
+                "source": "https://github.com/webmozarts/assert/tree/1.9.1"
             },
             "time": "2020-07-08T17:02:28+00:00"
         }
@@ -2299,6 +2299,9 @@
     "platform": {
         "php": ">=7.2"
     },
-    "platform-dev": [],
+    "platform-dev": {
+        "ext-json": "*",
+        "ext-readline": "*"
+    },
     "plugin-api-version": "2.0.0"
 }

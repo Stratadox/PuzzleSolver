@@ -1,5 +1,6 @@
 {
     "name": "stratadox/puzzle-solver",
+    "description": "A generic puzzle solving package, capable of solving a wide variety of puzzles.",
     "license": "MIT",
     "authors": [
         {
