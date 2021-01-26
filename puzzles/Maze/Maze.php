@@ -4,6 +4,7 @@ namespace Stratadox\PuzzleSolver\Puzzle\Maze;
 
 use function array_map;
 use function implode;
+use const PHP_EOL;
 
 final class Maze
 {
@@ -60,6 +61,6 @@ final class Maze
             $maze[$wall->y()][$wall->x()] = '#';
         }
         $maze[$this->exit->y()][$this->exit->x()] = 'X';
-        return implode("\n", array_map('implode', $maze));
+        return implode(PHP_EOL, array_map('implode', $maze));
     }
 }
