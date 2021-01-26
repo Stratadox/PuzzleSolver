@@ -8,6 +8,7 @@ use Stratadox\PuzzleSolver\Moves;
 use function assert;
 use function explode;
 use function implode;
+use const PHP_EOL;
 
 final class MazePuzzle implements Puzzle
 {
@@ -42,9 +43,9 @@ final class MazePuzzle implements Puzzle
 
     public function representation(): string
     {
-        $maze = explode("\n", (string) $this->maze);
+        $maze = explode(PHP_EOL, (string) $this->maze);
         $maze[$this->hero->y()][$this->hero->x()] = 'H';
-        return implode("\n", $maze);
+        return implode(PHP_EOL, $maze);
     }
 
     public function possibleMoves(): Moves

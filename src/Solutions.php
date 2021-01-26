@@ -4,6 +4,7 @@ namespace Stratadox\PuzzleSolver;
 
 use Stratadox\ImmutableCollection\ImmutableCollection;
 use function implode;
+use const PHP_EOL;
 
 /**
  * Collection of @see Solution objects
@@ -24,6 +25,9 @@ final class Solutions extends ImmutableCollection
 
     public function __toString(): string
     {
-        return implode("\n\n---\n\n", $this->items());
+        return implode(
+            PHP_EOL . PHP_EOL . "---" . PHP_EOL . PHP_EOL,
+            $this->items()
+        );
     }
 }
