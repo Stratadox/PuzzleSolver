@@ -11,8 +11,10 @@ namespace Stratadox\PuzzleSolver;
  */
 interface SolverBuilder
 {
-    public function withGoalTo(Find $goal): self;
-    public function withWeightedMoves(): self;
-    public function whereMovesEventuallyRunOut(): self;
+    public function withGoalTo(Find $goal): SolverBuilder;
+    public function withWeightedMoves(): SolverBuilder;
+    public function whereMovesEventuallyRunOut(): SolverBuilder;
+    public function withHeuristic(Heuristic $heuristic): SolverBuilder;
+    public function withLogging(string $file, string $separator, int $timeout = 0): SolverBuilder;
     public function select(): PuzzleSolver;
 }

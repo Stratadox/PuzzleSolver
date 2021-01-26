@@ -19,15 +19,19 @@ final class DebugLoggerFactory implements SearchStrategyFactory
     /** @var int */
     private $timeout;
     /** @var string */
+    private $separator;
+    /** @var string */
     private $output;
 
-    private function __construct(
+    public function __construct(
         SearchStrategyFactory $factory,
         int $timeout,
+        string $separator,
         string $output
     ) {
         $this->factory = $factory;
         $this->timeout = $timeout;
+        $this->separator = $separator;
         $this->output = $output;
     }
 
@@ -36,7 +40,16 @@ final class DebugLoggerFactory implements SearchStrategyFactory
         SearchStrategyFactory $factory,
         string $output = 'php://stdout'
     ): SearchStrategyFactory {
-        return new self($factory, $timeout, $output);
+        return new self($factory, $timeout, str_repeat(PHP_EOL, 20), $output);
+    }
+
+    public static function make(
+        int $timeout,
+        SearchStrategyFactory $factory,
+        string $separator,
+        string $outputFile
+    ): SearchStrategyFactory {
+        return new self($factory, $timeout, $separator, $outputFile);
     }
 
     public function begin(Puzzle $puzzle): SearchStrategy
@@ -44,7 +57,7 @@ final class DebugLoggerFactory implements SearchStrategyFactory
         return new DebugLogger(
             $this->factory->begin($puzzle),
             $this->timeout,
-            str_repeat(PHP_EOL, 20),
+            $this->separator,
             fopen($this->output, 'wb')
         );
     }

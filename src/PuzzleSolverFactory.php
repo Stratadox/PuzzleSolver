@@ -4,6 +4,7 @@ namespace Stratadox\PuzzleSolver;
 
 use Stratadox\PuzzleSolver\SearchStrategy\BestFirstStrategyFactory;
 use Stratadox\PuzzleSolver\SearchStrategy\BreadthFirstStrategyFactory;
+use Stratadox\PuzzleSolver\SearchStrategy\DebugLoggerFactory;
 use Stratadox\PuzzleSolver\SearchStrategy\DepthFirstStrategyFactory;
 use Stratadox\PuzzleSolver\SearchStrategy\DuplicateNodeSkipperFactory;
 use Stratadox\PuzzleSolver\SearchStrategy\SearchStrategyFactory;
@@ -20,11 +21,28 @@ use Stratadox\PuzzleSolver\Solver\LazySolver;
  */
 final class PuzzleSolverFactory implements SolverFactory
 {
-    public function forAPuzzleWith(PuzzleDescription $puzzle): PuzzleSolver
-    {
+    public function forAPuzzleWith(
+        PuzzleDescription $puzzle,
+        SearchSettings $settings
+    ): PuzzleSolver {
         return $puzzle->singleSolution() ?
-            EagerSolver::using($this->eagerStrategy($puzzle)) :
-            LazySolver::using($this->lazyStrategy($puzzle));
+            EagerSolver::using($this->add($settings, $this->eagerStrategy($puzzle))) :
+            LazySolver::using($this->add($settings, $this->lazyStrategy($puzzle)));
+    }
+
+    private function add(
+        SearchSettings $settings,
+        SearchStrategyFactory $strategyFactory
+    ): SearchStrategyFactory {
+        if (null === $settings->loggingFile()) {
+            return $strategyFactory;
+        }
+        return DebugLoggerFactory::make(
+            $settings->iterationInterval(),
+            $strategyFactory,
+            $settings->logSeparator(),
+            $settings->loggingFile()
+        );
     }
 
     /**

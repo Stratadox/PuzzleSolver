@@ -9,5 +9,8 @@ namespace Stratadox\PuzzleSolver;
  */
 interface SolverFactory
 {
-    public function forAPuzzleWith(PuzzleDescription $puzzle): PuzzleSolver;
+    public function forAPuzzleWith(
+        PuzzleDescription $puzzle,
+        SearchSettings $settings
+    ): PuzzleSolver;
 }
