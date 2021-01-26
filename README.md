@@ -1,5 +1,12 @@
 # Puzzle Solver
 
+[![Build Status](https://circleci.com/gh/Stratadox/PuzzleSolver.svg?style=shield)](https://app.circleci.com/pipelines/github/Stratadox/PuzzleSolver)
+[![codecov](https://codecov.io/gh/Stratadox/PuzzleSolver/branch/main/graph/badge.svg)](https://codecov.io/gh/Stratadox/PuzzleSolver)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Stratadox/PuzzleSolver/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Stratadox/PuzzleSolver/?branch=master)
+[![Maintainability](https://api.codeclimate.com/v1/badges/d43d21a26591fb14cdc3/maintainability)](https://codeclimate.com/github/Stratadox/PuzzleSolver/maintainability)
+[![Latest Stable Version](https://poser.pugx.org/stratadox/puzzle-solver/v/stable)](https://packagist.org/packages/stratadox/puzzle-solver)
+[![License](https://poser.pugx.org/stratadox/puzzle-solver/license)](https://packagist.org/packages/stratadox/puzzle-solver)
+
 A generic puzzle solving package, capable of solving a wide variety of puzzles.
 
 ## Examples
