@@ -21,7 +21,7 @@ In order to find *all* possible solutions, a `lazy` solver is required.
 When only a single solution is needed, an `eager` solver is faster.
 
 | Puzzle attribute      | Value             |
-|: ----------------     |: ---------------- |
+|-----------------------|-------------------|
 | Goal                  | All best solutions|
 | Best paths converge   | No                |
 | Move weight           | Constant          |

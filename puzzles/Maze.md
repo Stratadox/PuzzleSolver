@@ -48,7 +48,7 @@ decorator.
 ### All paths
 
 | Puzzle attribute      | Value                     |
-|: -------------------- |: ------------------------ |
+|-----------------------|---------------------------|
 | Goal                  | All loopless solutions    |
 | Best paths converge   | Yes                       |
 | Move weight           | Constant                  |

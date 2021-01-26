@@ -74,7 +74,7 @@ G G H H E F
 ## Solver
 
 | Puzzle attribute  | Value             |
-|: ---------------- |: ---------------- |
+|-------------------|-------------------|
 | Goal              | A best solution   |
 | Move weight       | Constant          |
 | Heuristic         | Yes               |

@@ -63,7 +63,7 @@ between the current state and the goal state, an [A* search](https://en.wikipedi
 can be used to find the shortest answer most efficiently.
 
 | Puzzle attribute  | Value             |
-|: ---------------- |: ---------------- |
+|-------------------|-------------------|
 | Goal              | A best solution   |
 | Move weight       | Constant          |
 | Heuristic         | Yes               |

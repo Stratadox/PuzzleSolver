@@ -45,7 +45,7 @@ breadth-first algorithms, whether eager or lazy, are very
 suitable for solving this puzzle.
 
 | Puzzle attribute  | Value             |
-|: ---------------- |: ---------------- |
+|-------------------|-------------------|
 | Goal              | A best solution   |
 | Move weight       | Variable          |
 | Heuristic         | No                |

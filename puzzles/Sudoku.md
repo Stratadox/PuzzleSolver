@@ -27,7 +27,7 @@ This sudoku puzzle implementation comes in both a mutable and an immutable
 flavour, either a stack-based or a recursive solver can be used.
 
 | Puzzle attribute  | Value             |
-|: ---------------- |: ---------------- |
+|-------------------|-------------------|
 | Goal              | The only solution |
 | Move weight       | Constant          |
 | Heuristic         | No                |

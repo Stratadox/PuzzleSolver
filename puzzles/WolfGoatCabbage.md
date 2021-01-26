@@ -36,7 +36,7 @@ There are two solutions to the problem, both take a total of 7 crossings.
 ### When looking for o best solution
 
 | Puzzle attribute  | Value             |
-|: -----------------|: ---------------- |
+|-------------------|-------------------|
 | Goal              | A best solution   |
 | Move weight       | Constant          |
 | Heuristic         | No                |
