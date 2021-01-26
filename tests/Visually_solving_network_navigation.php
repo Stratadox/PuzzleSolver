@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Stratadox\PuzzleSolver\Find;
 use Stratadox\PuzzleSolver\Puzzle\NetworkNavigation\NetworkNavigationPuzzle;
 use Stratadox\PuzzleSolver\Renderer\MovesToFileRenderer;
+use Stratadox\PuzzleSolver\Renderer\PuzzleStatesToFileRenderer;
 use Stratadox\PuzzleSolver\UniversalSolver;
 use function file_get_contents;
 use function file_put_contents;
@@ -80,5 +81,25 @@ class Visually_solving_network_navigation extends TestCase
         $output = file_get_contents(self::FILE);
 
         self::assertEquals('Go to B; Go to C', $output);
+    }
+
+    /** @test */
+    function playing_back_the_solution_states()
+    {
+        $solver = UniversalSolver::aimingTo(Find::aBestSolution())
+            ->withWeightedMoves()
+            ->select();
+
+        $renderer = PuzzleStatesToFileRenderer::fromFilenameAndSeparator(self::FILE, '; ');
+
+        $puzzle = NetworkNavigationPuzzle::fromJsonAndStartAndGoal(self::NETWORK, 'A', 'C');
+
+        $solution = $solver->solve($puzzle)[0];
+
+        $renderer->render($solution);
+
+        $output = file_get_contents(self::FILE);
+
+        self::assertEquals('A; B; C', $output);
     }
 }
