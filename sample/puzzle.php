@@ -22,52 +22,17 @@ $directory = dirname(__DIR__) . str_replace(
 );
 
 $json = file_get_contents(dirname(__DIR__) . '/sample/puzzles.json');
-$puzzleData = json_decode($json, true);
-$factories = [];
-foreach ($puzzleData['factories'] as $type => $factory) {
-    assert(is_callable($factory));
-    $factories[$type] = $factory();
-}
-
-$sep = str_repeat(PHP_EOL, 40);
-$time = 600000;
-$puzzleInfo = [];
-foreach ($puzzleData['puzzles'] as $puzzle) {
-    $dir = sprintf($directory, $puzzle['type']);
-    $description = new PuzzleDescription(
-        Find::fromString($puzzle['find']),
-        $puzzle['variable_cost'] ?? false,
-        $puzzle['exhausting'] ?? false,
-        isset($puzzle['heuristic']) ? new $puzzle['heuristic']() : null
-    );
-    $renderer = ($puzzle['display'] ?? 'states') === 'states' ?
-        PuzzleStatesToFileRenderer::fromFilenameAndSeparator(OUT, $sep, $time) :
-        MovesToFileRenderer::fromFilenameAndSeparator(OUT, $sep, $time);
-
-    $puzzleInfo[$puzzle['name']] = [];
-    foreach (scandir($dir) as $file) {
-        if (substr($file, -4) !== '.txt') {
-            continue;
-        }
-        $puzzleInfo[$puzzle['name']][$file[0]] = [
-            'levelFile' => $dir . $file,
-            'factory' => $factories[$puzzle['type']],
-            'description' => $description,
-            'renderer' => $renderer,
-            'isDefault' => (($puzzle['default'] ?? '') . '.txt') ===  $file,
-            'isTheOnlyOne' => (bool) ($puzzle['level'] ?? false),
-        ];
-    }
-}
+$puzzleInfo = gatherPuzzleData(json_decode($json, true), $directory);
 
 $puzzleName = choosePuzzle($puzzleInfo);
 echo PHP_EOL . 'Selected puzzle: ' . $puzzleName . PHP_EOL . PHP_EOL;
-$levelTag = chooseLevel($puzzleInfo, $puzzleName);
+$levelTag = chooseLevel($puzzleInfo[$puzzleName]);
 $puzzleData = $puzzleInfo[$puzzleName][$levelTag];
 $level = file_get_contents($puzzleData['levelFile']);
 if (!empty($level)) {
-    echo 'The chosen level is: ' . PHP_EOL . PHP_EOL . $level . PHP_EOL . PHP_EOL;
+    echo 'The chosen level is: ' . PHP_EOL . $level . PHP_EOL . PHP_EOL;
 }
+
 $settings = chooseSettings();
 $solutions = solvePuzzle(
     $puzzleData['factory'],
@@ -77,6 +42,47 @@ $solutions = solvePuzzle(
 );
 render($solutions, $puzzleData['renderer']);
 
+function gatherPuzzleData(array $puzzleData, string $directory): array
+{
+    $factories = [];
+    foreach ($puzzleData['factories'] as $type => $factory) {
+        assert(is_callable($factory));
+        $factories[$type] = $factory();
+    }
+
+    $sep = str_repeat(PHP_EOL, 40);
+    $time = 600000;
+    $puzzleInfo = [];
+    foreach ($puzzleData['puzzles'] as $puzzle) {
+        $dir = sprintf($directory, $puzzle['type']);
+        $description = new PuzzleDescription(
+            Find::fromString($puzzle['find']),
+            $puzzle['variable_cost'] ?? false,
+            $puzzle['exhausting'] ?? false,
+            isset($puzzle['heuristic']) ? new $puzzle['heuristic']() : null
+        );
+        $renderer = ($puzzle['display'] ?? 'states') === 'states' ?
+            PuzzleStatesToFileRenderer::fromFilenameAndSeparator(OUT, $sep, $time) :
+            MovesToFileRenderer::fromFilenameAndSeparator(OUT, $sep, $time);
+
+        $puzzleInfo[$puzzle['name']] = [];
+        foreach (scandir($dir) as $file) {
+            if (substr($file, -4) !== '.txt') {
+                continue;
+            }
+            $puzzleInfo[$puzzle['name']][$file[0]] = [
+                'levelFile' => $dir . $file,
+                'factory' => $factories[$puzzle['type']],
+                'description' => $description,
+                'renderer' => $renderer,
+                'isDefault' => (($puzzle['default'] ?? '') . '.txt') ===  $file,
+                'isTheOnlyOne' => (bool) ($puzzle['level'] ?? false),
+            ];
+        }
+    }
+    return $puzzleInfo;
+}
+
 function choosePuzzle(array $puzzleInfo): string
 {
     $puzzleChoices = array_keys($puzzleInfo);
@@ -85,24 +91,24 @@ function choosePuzzle(array $puzzleInfo): string
         'The following puzzles are installed:'
     ];
     foreach ($puzzleChoices as $n => $name) {
-        $welcome[] = sprintf('Type %d: %s', $n, $name);
+        $welcome[] = sprintf('Type %d: %s', $n + 1, $name);
     }
 
     echo implode(PHP_EOL, $welcome) . PHP_EOL . PHP_EOL;
 
     do {
-        $puzzleChoice = readline('Which puzzle would you like to solve? ');
-    } while (!ctype_digit($puzzleChoice));
+        $puzzleChoice = (int) (readline('Which puzzle would you like to solve? ')) - 1;
+    } while (!isset($puzzleChoices[$puzzleChoice]));
 
     return $puzzleChoices[$puzzleChoice];
 }
 
-function chooseLevel(array $puzzleInfo, string $name): string
+function chooseLevel(array $puzzleInfo): string
 {
     $welcome = [
         'The following levels are available:'
     ];
-    foreach ($puzzleInfo[$name] as $letter => $puzzleDate) {
+    foreach ($puzzleInfo as $letter => $puzzleDate) {
         if ($puzzleDate['isTheOnlyOne']) {
             return $letter;
         }
@@ -114,6 +120,10 @@ function chooseLevel(array $puzzleInfo, string $name): string
 
     do {
         $levelChoice = strtoupper(readline('Which level would you like to solve? '));
+        if (!isset($puzzleInfo[$levelChoice])) {
+            echo sprintf('Level %s not found!', $levelChoice) . PHP_EOL;
+            $levelChoice = '';
+        }
     } while (strlen($levelChoice) !== 1);
 
     return $levelChoice;
@@ -139,13 +149,13 @@ function solvePuzzle(
     $solver = PuzzleSolverFactory::make()
         ->forAPuzzleWith($description, $settings);
 
+    echo PHP_EOL . 'Solving the puzzle...' . PHP_EOL;
     try {
         return $solver->solve($puzzle);
     } catch (NoSolution $exception) {
         die($exception->getMessage());
     }
 }
-
 
 function render(Solutions $solutions, SolutionRenderer $renderer)
 {
