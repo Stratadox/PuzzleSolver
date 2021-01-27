@@ -15,7 +15,7 @@ final class LevenshteinHeuristic implements Heuristic
 
         return levenshtein(
             $puzzle->goalState(),
-            $puzzle->representation(),
+            $puzzle->currentState(),
             100,
             1,
             100

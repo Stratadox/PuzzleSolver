@@ -29,6 +29,11 @@ final class SlidingPuzzle implements Puzzle
         return $this->board->goalState();
     }
 
+    public function currentState(): string
+    {
+        return $this->board->currentState();
+    }
+
     public function representation(): string
     {
         return (string) $this->board;

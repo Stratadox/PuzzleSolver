@@ -3,11 +3,14 @@
 namespace Stratadox\PuzzleSolver\Puzzle\SlidingPuzzle;
 
 use RuntimeException;
+use function array_fill;
 use function array_map;
 use function assert;
 use function count;
 use function implode;
 use function range;
+use function str_replace;
+use const PHP_EOL;
 
 final class Board
 {
@@ -42,7 +45,12 @@ final class Board
 
     public function isSolved(): bool
     {
-        return $this->goalState() === (string) $this;
+        return $this->goalState() === $this->currentState();
+    }
+
+    public function currentState(): string
+    {
+        return implode(array_map('implode', $this->pieces));
     }
 
     public function goalState(): string
@@ -69,9 +77,13 @@ final class Board
         return $slides;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
-        return implode(array_map('implode', $this->pieces));
+        return str_replace('0', ' ', implode(PHP_EOL, array_map(
+            'implode',
+            array_fill(0, $this->width, ', '),
+            $this->pieces
+        ))) . '  ';
     }
 
     /** @return int[] */
