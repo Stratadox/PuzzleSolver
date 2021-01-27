@@ -1,0 +1,6 @@
+. . A A A
+r r . . B
+. . . . B
+. D . . B
+. D C C C
+TARGET: r

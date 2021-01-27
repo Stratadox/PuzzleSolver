@@ -1,0 +1,75 @@
+{
+  "puzzles": [
+    {
+      "name": "Maze, best path",
+      "type": "Maze",
+      "find": "A best solution",
+      "default": "C_Maze_with_dead_ends"
+    },
+    {
+      "name": "Maze, all paths",
+      "type": "Maze",
+      "find": "All loopless solutions",
+      "default": "D_Maze_with_multiple_paths"
+    },
+    {
+      "name": "Network Navigation",
+      "type": "NetworkNavigation",
+      "find": "A best solution",
+      "variable_cost": true,
+      "display": "moves",
+      "default": "B_Slightly_larger_network"
+    },
+    {
+      "name": "N-Queens puzzle",
+      "type": "NQueens",
+      "find": "All best solutions",
+      "exhausting": true,
+      "default": "A_5_Queens"
+    },
+    {
+      "name": "Sliding Crates Puzzle",
+      "type": "SlidingCrates",
+      "find": "A best solution",
+      "heuristic": "Stratadox\\PuzzleSolver\\Puzzle\\SlidingCrates\\CrateHeuristic",
+      "default": "A_Simple_puzzle"
+    },
+    {
+      "name": "Sliding Puzzle",
+      "type": "SlidingPuzzle",
+      "find": "A best solution",
+      "heuristic": "Stratadox\\PuzzleSolver\\Puzzle\\SlidingPuzzle\\LevenshteinHeuristic",
+      "default": "A_2_x_2_puzzle"
+    },
+    {
+      "name": "Sudoku puzzle",
+      "type": "Sudoku",
+      "find": "The only solution",
+      "exhausting": true,
+      "default": "A_Example_sudoku"
+    },
+    {
+      "name": "Wolf-goat-cabbage Puzzle, a solution",
+      "type": "WolfGoatCabbage",
+      "find": "A best solution",
+      "display": "moves",
+      "level": "A_There_is_only_one_configuration"
+    },
+    {
+      "name": "Wolf-goat-cabbage Puzzle, both solutions",
+      "type": "WolfGoatCabbage",
+      "find": "All best solutions",
+      "display": "moves",
+      "level": "A_There_is_only_one_configuration"
+    }
+  ],
+  "factories": {
+    "Maze": "Stratadox\\PuzzleSolver\\Puzzle\\Maze\\MazeFactory::make",
+    "NetworkNavigation": "Stratadox\\PuzzleSolver\\Puzzle\\NetworkNavigation\\NetworkPuzzleFactory::make",
+    "NQueens": "Stratadox\\PuzzleSolver\\Puzzle\\NQueens\\NQueensFactory::make",
+    "SlidingCrates": "Stratadox\\PuzzleSolver\\Puzzle\\SlidingCrates\\SlidingCratesPuzzleFactory::make",
+    "SlidingPuzzle": "Stratadox\\PuzzleSolver\\Puzzle\\SlidingPuzzle\\SlidingPuzzleFactory::make",
+    "Sudoku": "Stratadox\\PuzzleSolver\\Puzzle\\Sudoku\\SudokuFactory::make",
+    "WolfGoatCabbage": "Stratadox\\PuzzleSolver\\Puzzle\\WolfGoatCabbage\\RiverCrossingFactory::make"
+  }
+}

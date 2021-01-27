@@ -21,6 +21,11 @@ use Stratadox\PuzzleSolver\Solver\LazySolver;
  */
 final class PuzzleSolverFactory implements SolverFactory
 {
+    public static function make(): self
+    {
+        return new self();
+    }
+
     public function forAPuzzleWith(
         PuzzleDescription $puzzle,
         SearchSettings $settings

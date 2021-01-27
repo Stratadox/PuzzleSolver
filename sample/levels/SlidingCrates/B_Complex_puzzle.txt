@@ -1,0 +1,7 @@
+. . . . A A
+. . B B C C
+r r . . E F
+G G H H E F
+. . . I E F
+. . . I J J
+TARGET: r

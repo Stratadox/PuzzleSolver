@@ -1,0 +1,21 @@
+{
+  "edges": [
+    {
+      "from": "A",
+      "to": "B",
+      "cost": 1.4
+    },
+    {
+      "from": "B",
+      "to": "C",
+      "cost": 1.34
+    },
+    {
+      "from": "A",
+      "to": "C",
+      "cost": 2.76
+    }
+  ],
+  "start": "A",
+  "goal": "C"
+}

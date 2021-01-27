@@ -2,6 +2,9 @@
 
 namespace Stratadox\PuzzleSolver;
 
+use function assert;
+use function strtolower;
+
 /**
  * Find
  *
@@ -16,6 +19,12 @@ final class Find
     private const A_BEST_SOLUTION = 1;
     private const ALL_BEST_SOLUTIONS = 2;
     private const ALL_LOOPLESS_SOLUTIONS = 3;
+    private const MAP = [
+        'the only solution' => FIND::THE_ONLY_SOLUTION,
+        'a best solution' => FIND::A_BEST_SOLUTION,
+        'all best solutions' => FIND::ALL_BEST_SOLUTIONS,
+        'all loopless solutions' => FIND::ALL_LOOPLESS_SOLUTIONS,
+    ];
 
     /** @var int */
     private $solutionType;
@@ -43,6 +52,13 @@ final class Find
     public static function allLooplessSolutions(): self
     {
         return new self(Find::ALL_LOOPLESS_SOLUTIONS);
+    }
+
+    public static function fromString(string $type): self
+    {
+        $type = strtolower($type);
+        assert(isset(Find::MAP[$type]));
+        return new self(Find::MAP[$type]);
     }
 
     public function singleSolution(): bool

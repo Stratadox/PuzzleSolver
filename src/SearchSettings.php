@@ -21,6 +21,11 @@ final class SearchSettings
         $this->iterationInterval = $iterationInterval;
     }
 
+    public static function defaults(): self
+    {
+        return new self(null, '', 0);
+    }
+
     public function loggingFile(): ?string
     {
         return $this->loggingFile;

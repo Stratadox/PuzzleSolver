@@ -1,189 +1,167 @@
 <?php declare(strict_types=1);
 
-use Stratadox\PuzzleSolver\Puzzle;
-use Stratadox\PuzzleSolver\PuzzleSolver;
+use Stratadox\PuzzleSolver\Find;
 use Stratadox\PuzzleSolver\NoSolution;
-use Stratadox\PuzzleSolver\Puzzle\Maze\MazeFactory;
-use Stratadox\PuzzleSolver\Puzzle\NQueens\NQueensPuzzle;
-use Stratadox\PuzzleSolver\Puzzle\SlidingCrates\CrateHeuristic;
-use Stratadox\PuzzleSolver\Puzzle\SlidingCrates\SlidingCratesPuzzle;
-use Stratadox\PuzzleSolver\SearchStrategy\BestFirstStrategyFactory;
-use Stratadox\PuzzleSolver\SearchStrategy\BreadthFirstStrategyFactory;
-use Stratadox\PuzzleSolver\SearchStrategy\DebugLoggerFactory;
-use Stratadox\PuzzleSolver\SearchStrategy\DepthFirstStrategyFactory;
-use Stratadox\PuzzleSolver\SearchStrategy\VisitedNodeCostCheckerFactory;
-use Stratadox\PuzzleSolver\SearchStrategy\VisitedNodeSkipperFactory;
+use Stratadox\PuzzleSolver\PuzzleDescription;
+use Stratadox\PuzzleSolver\PuzzleFactory;
+use Stratadox\PuzzleSolver\PuzzleSolverFactory;
+use Stratadox\PuzzleSolver\Renderer\MovesToFileRenderer;
+use Stratadox\PuzzleSolver\Renderer\PuzzleStatesToFileRenderer;
+use Stratadox\PuzzleSolver\SearchSettings;
+use Stratadox\PuzzleSolver\SolutionRenderer;
 use Stratadox\PuzzleSolver\Solutions;
-use Stratadox\PuzzleSolver\Solver\EagerSolver;
-use Stratadox\PuzzleSolver\Solver\LazySolver;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-const EAGER_BFS = 'eager breadth first';
-const CRATE = 'crate';
-const LAZY_DFS = 'lazy depth first';
+const OUT = 'php://stdout';
 
-$timeout = 10000;
-$solver = [
-    EAGER_BFS => EagerSolver::using(
-        VisitedNodeSkipperFactory::using(
-            DebugLoggerFactory::withTimeout(
-                $timeout,
-                BreadthFirstStrategyFactory::make()
-            )
-        )
-    ),
-    CRATE => EagerSolver::using(
-        VisitedNodeCostCheckerFactory::using(
-            DebugLoggerFactory::withTimeout(
-                $timeout,
-                BestFirstStrategyFactory::withHeuristic(
-                    new CrateHeuristic()
-                )
-            )
-        )
-    ),
-    LAZY_DFS => LazySolver::using(
-        VisitedNodeSkipperFactory::using(
-            DebugLoggerFactory::withTimeout(
-                $timeout,
-                DepthFirstStrategyFactory::make()
-            )
-        )
-    ),
-];
-$puzzles = [
-    'maze',
-    'n-queens',
-    'sliding-crates',
-    'n-sliding',
-    'sudoku',
-    'wolf-goat-cabbage',
-];
-echo "Choose your puzzle:\n";
-foreach ($puzzles as $n => $name) {
-    echo "$n: $name puzzle\n";
-}
-$n = readline("Type the number of your puzzle and press enter: ");
-$f = str_replace('-', '_', $puzzles[$n]);
-$puzzleName = $puzzles[$n] . ' puzzle';
+$directory = dirname(__DIR__) . str_replace(
+    '/',
+    DIRECTORY_SEPARATOR,
+    '/sample/levels/%s/'
+);
 
-echo "\n\n\n";
-echo "Let's automatically solve a $puzzleName!\n\n";
-
-if (!function_exists($f)) {
-    echo "@todo: $f()\n";
-    exit;
+$json = file_get_contents(dirname(__DIR__) . '/sample/puzzles.json');
+$puzzleData = json_decode($json, true);
+$factories = [];
+foreach ($puzzleData['factories'] as $type => $factory) {
+    assert(is_callable($factory));
+    $factories[$type] = $factory();
 }
 
-try {
-    /** @var Solutions $solutions */
-    $solutions = $f($solver);
-} catch (NoSolution $exception) {
-    die("FAILED\n\n{$exception->getMessage()}");
-}
+$sep = str_repeat(PHP_EOL, 40);
+$time = 600000;
+$puzzleInfo = [];
+foreach ($puzzleData['puzzles'] as $puzzle) {
+    $dir = sprintf($directory, $puzzle['type']);
+    $description = new PuzzleDescription(
+        Find::fromString($puzzle['find']),
+        $puzzle['variable_cost'] ?? false,
+        $puzzle['exhausting'] ?? false,
+        isset($puzzle['heuristic']) ? new $puzzle['heuristic']() : null
+    );
+    $renderer = ($puzzle['display'] ?? 'states') === 'states' ?
+        PuzzleStatesToFileRenderer::fromFilenameAndSeparator(OUT, $sep, $time) :
+        MovesToFileRenderer::fromFilenameAndSeparator(OUT, $sep, $time);
 
-$n = count($solutions);
-if ($n === 1) {
-    echo "\n\nFound a solution!";
-} else {
-    echo "\n\nFound $n solutions!";
-}
-
-foreach ($solutions as $i => $solution) {
-    $x = $i + 1;
-    $puzzle = $solution->original();
-    foreach ($solution->moves() as $move) {
-        /** @var Puzzle $puzzle */
-        $puzzle = $puzzle->afterMaking($move);
-        echo str_repeat(PHP_EOL, 20) . "Solution $x:\n" . $puzzle->representation();
-        usleep(200000);
+    $puzzleInfo[$puzzle['name']] = [];
+    foreach (scandir($dir) as $file) {
+        if (substr($file, -4) !== '.txt') {
+            continue;
+        }
+        $puzzleInfo[$puzzle['name']][$file[0]] = [
+            'levelFile' => $dir . $file,
+            'factory' => $factories[$puzzle['type']],
+            'description' => $description,
+            'renderer' => $renderer,
+            'isDefault' => (($puzzle['default'] ?? '') . '.txt') ===  $file,
+            'isTheOnlyOne' => (bool) ($puzzle['level'] ?? false),
+        ];
     }
-    usleep(300000);
 }
 
+$puzzleName = choosePuzzle($puzzleInfo);
+echo PHP_EOL . 'Selected puzzle: ' . $puzzleName . PHP_EOL . PHP_EOL;
+$levelTag = chooseLevel($puzzleInfo, $puzzleName);
+$puzzleData = $puzzleInfo[$puzzleName][$levelTag];
+$level = file_get_contents($puzzleData['levelFile']);
+if (!empty($level)) {
+    echo 'The chosen level is: ' . PHP_EOL . PHP_EOL . $level . PHP_EOL . PHP_EOL;
+}
+$settings = chooseSettings();
+$solutions = solvePuzzle(
+    $puzzleData['factory'],
+    $puzzleData['description'],
+    $settings,
+    $level
+);
+render($solutions, $puzzleData['renderer']);
 
-/**
- * @param PuzzleSolver[] $solvers
- * @return Solutions
- * @throws NoSolution
- */
-function maze(array $solvers): Solutions
+function choosePuzzle(array $puzzleInfo): string
 {
-    $mazes = [
-        '
-###################
-# H    #          #
-#            #  X #
-###################
-        ',
-        '
-###################
-# H    #     #X   #
-# ###### # ###### #
-#        #        #
-###################
-        ',
-        '
-###################
-#H# X             #
-# ############### #
-#      # #      # #
-# ###### # ###### #
-#                 #
-###################
-        ',
-        '
-#########
-#H      #
-# ##### #
-# #X    #
-# # #####
-#       #
-# ##### #
-#       #
-#########
-        '
+    $puzzleChoices = array_keys($puzzleInfo);
+    $welcome = [
+        'Welcome to the universal puzzle solver!',
+        'The following puzzles are installed:'
     ];
-
-    echo "Choose your maze:\n";
-    foreach ($mazes as $n => $name) {
-        echo "$n:\n\n$name\n\n---\n\n";
+    foreach ($puzzleChoices as $n => $name) {
+        $welcome[] = sprintf('Type %d: %s', $n, $name);
     }
-    $n = readline("Type the number of your maze and press enter: ");
 
-    $maze = MazeFactory::make()->fromString($mazes[$n]);
+    echo implode(PHP_EOL, $welcome) . PHP_EOL . PHP_EOL;
 
-    return $solvers[EAGER_BFS]->solve($maze);
-}
-
-/**
- * @param PuzzleSolver[] $solvers
- * @return Solutions
- * @throws NoSolution
- */
-function n_queens(array $solvers): Solutions
-{
-    $nQueens = NQueensPuzzle::forQueens((int) readline('How many queens?'));
-
-    return $solvers[LAZY_DFS]->solve($nQueens);
-}
-
-/**
- * @param PuzzleSolver[] $solvers
- * @return Solutions
- * @throws NoSolution
- */
-function sliding_crates(array $solvers): Solutions
-{
-    echo "Enter the level:\n";
-    $crates = '';
     do {
-        $line = readline();
-        $crates .= "$line\n";
-    } while(!empty($line));
-    $crate = readline('Which crate to liberate?');
-    $cratePuzzle = SlidingCratesPuzzle::fromString($crates, $crate);
+        $puzzleChoice = readline('Which puzzle would you like to solve? ');
+    } while (!ctype_digit($puzzleChoice));
 
-    return $solvers[CRATE]->solve($cratePuzzle);
+    return $puzzleChoices[$puzzleChoice];
+}
+
+function chooseLevel(array $puzzleInfo, string $name): string
+{
+    $welcome = [
+        'The following levels are available:'
+    ];
+    foreach ($puzzleInfo[$name] as $letter => $puzzleDate) {
+        if ($puzzleDate['isTheOnlyOne']) {
+            return $letter;
+        }
+        $n = str_replace(' ', '', substr(basename($puzzleDate['levelFile']), 2, -4));
+        $welcome[] = sprintf('%s: %s', $letter, $n);
+    }
+
+    echo implode(PHP_EOL, $welcome) . PHP_EOL . PHP_EOL;
+
+    do {
+        $levelChoice = strtoupper(readline('Which level would you like to solve? '));
+    } while (strlen($levelChoice) !== 1);
+
+    return $levelChoice;
+}
+
+function chooseSettings()
+{
+    $visual = readline('Would you like to visualise the search? [Y]/n ');
+    if ($visual !== '' && strtolower($visual) !== 'y') {
+        return SearchSettings::defaults();
+    }
+    return new SearchSettings(OUT, str_repeat(PHP_EOL, 40), 80000);
+}
+
+function solvePuzzle(
+    PuzzleFactory $puzzleFactory,
+    PuzzleDescription $description,
+    SearchSettings $settings,
+    string $level
+): Solutions {
+    $puzzle = $puzzleFactory->fromString($level);
+
+    $solver = PuzzleSolverFactory::make()
+        ->forAPuzzleWith($description, $settings);
+
+    try {
+        return $solver->solve($puzzle);
+    } catch (NoSolution $exception) {
+        die($exception->getMessage());
+    }
+}
+
+
+function render(Solutions $solutions, SolutionRenderer $renderer)
+{
+    $nl = str_repeat(PHP_EOL, 40);
+    echo $nl . 'Solved!' . str_repeat(PHP_EOL, 5);
+    sleep(1);
+    if (count($solutions) === 1) {
+        $renderer->render($solutions[0]);
+        echo $nl . $solutions[0]->state()->representation();
+    } else {
+        foreach ($solutions as $i => $solution) {
+            echo sprintf('%sSolution %d: %s', $nl, $i + 1, str_repeat(PHP_EOL, 5));
+            sleep(1);
+            echo $nl;
+            $renderer->render($solution);
+            echo $nl . $solution->state()->representation();
+        }
+    }
 }

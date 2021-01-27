@@ -39,12 +39,12 @@ final class UniversalSolver implements SolverBuilder
 
     public static function forAPuzzle(): SolverBuilder
     {
-        return new self(new PuzzleSolverFactory(), null);
+        return new self(PuzzleSolverFactory::make(), null);
     }
 
     public static function aimingTo(Find $goal): SolverBuilder
     {
-        return new self(new PuzzleSolverFactory(), $goal);
+        return new self(PuzzleSolverFactory::make(), $goal);
     }
 
     public function withGoalTo(Find $goal): SolverBuilder
