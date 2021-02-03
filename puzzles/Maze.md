@@ -31,7 +31,7 @@ multiple possible solutions, an eager depth-first solver might find a very odd
 and inefficient path.
 
 | Puzzle attribute  | Value             |
-|: ---------------- |: ---------------- |
+|-------------------|-------------------|
 | Goal              | A best solution   |
 | Move weight       | Constant          |
 | Heuristic         | No                |

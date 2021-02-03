@@ -53,7 +53,7 @@ decorator.
 ### When looking for all best solutions
 
 | Puzzle attribute      | Value             |
-|: -------------------- |: ---------------- |
+|-----------------------|-------------------|
 | Goal                  | All best solutions|
 | Best paths converge   | Yes               |
 | Move weight           | Constant          |
